@@ -44,7 +44,7 @@ body {
     backface-visibility: hidden;
     will-change: transform;
     animation: float-vertical 6s ease-in-out infinite;
-    transition: transform 600ms cubic-bezier(.2,.8,.2,1);
+    transition: transform 300ms cubic-bezier(.2,.8,.2,1);
 }
 
 /* Vertical float animation (smaller amplitude) */
