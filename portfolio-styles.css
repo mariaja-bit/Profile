@@ -358,3 +358,100 @@ p {
         grid-template-columns: 1fr;
     }
 }
+
+/* Contact button styles */
+.contact-section .contact-links {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    margin-top: 12px;
+}
+
+.contact-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 56px;
+    height: 56px;
+    border-radius: 6px; /* square with slight rounding */
+    text-decoration: none;
+    transition: transform 160ms ease, box-shadow 160ms ease;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+}
+
+.contact-btn svg { width: 24px; height: 24px; display: block; }
+
+/* Non-scaling strokes for crisper icons */
+.contact-btn svg path { vector-effect: non-scaling-stroke; }
+
+.contact-btn.email {
+    background: linear-gradient(135deg, #5aa9ff 0%, #2d86ff 100%);
+    color: white;
+}
+
+.contact-btn.linkedin {
+    background: linear-gradient(135deg, #0a66c2 0%, #004b9b 100%);
+    color: white;
+}
+
+.contact-btn:hover, .contact-btn:focus {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 28px rgba(0,0,0,0.14);
+    outline: none;
+}
+
+.contact-btn:focus {
+    box-shadow: 0 0 0 4px rgba(13,110,253,0.12);
+}
+
+/* Tooltip styles (visual tooltip using data-tooltip attribute) */
+.contact-btn { position: relative; }
+.contact-btn[data-tooltip]::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: calc(100% + 10px);
+    left: 50%;
+    transform: translateX(-50%) translateY(6px) scale(.98);
+    background: rgba(34,34,34,0.95);
+    color: #fff;
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-size: 0.85em;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 160ms ease, transform 160ms ease;
+    z-index: 1200;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.16);
+}
+.contact-btn[data-tooltip]::before {
+    content: '';
+    position: absolute;
+    bottom: calc(100% + 4px);
+    left: 50%;
+    transform: translateX(-50%);
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-top: 6px solid rgba(34,34,34,0.95);
+    opacity: 0;
+    transition: opacity 160ms ease;
+    z-index: 1200;
+}
+.contact-btn:hover[data-tooltip]::after,
+.contact-btn:focus[data-tooltip]::after,
+.contact-btn:active[data-tooltip]::after {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0) scale(1);
+}
+.contact-btn:hover[data-tooltip]::before,
+.contact-btn:focus[data-tooltip]::before,
+.contact-btn:active[data-tooltip]::before {
+    opacity: 1;
+}
+
+/* Small helper for screen readers */
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+
+@media (max-width: 480px) {
+    .contact-btn { width: 48px; height: 48px; }
+}
