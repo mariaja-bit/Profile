@@ -10,7 +10,9 @@ body {
     min-height: 100vh;
     padding: 20px;
     overflow-x: hidden;
-}
+    -webkit-perspective: 1000px;
+    perspective: 1000px;
+} 
 
 .container {
     max-width: 1200px;
@@ -40,9 +42,11 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
+    -webkit-transform-style: preserve-3d;
     transform-style: preserve-3d;
-    backface-visibility: hidden;
     will-change: transform;
+    -webkit-perspective: 1000px;
+    perspective: 1000px;
     animation: float-vertical 6s ease-in-out infinite;
     transition: transform 300ms cubic-bezier(.2,.8,.2,1);
 }
@@ -53,15 +57,22 @@ body {
     50%     { transform: translateX(-50%) translateY(-6px); }
 }
 
-/* Hover: pause float and perform a half-spin (180deg) */
+/* Hover: pause float and perform a full spin (360deg) on the inner image for better cross-browser support */
 .site-avatar:hover {
     animation-play-state: paused;
-    transform: translateX(-50%) translateY(-3px) rotateY(180deg) scale(1.04);
+    transform: translateX(-50%) translateY(-3px);
+}
+.site-avatar:hover img {
+    transform-origin: center;
+    -webkit-transform-origin: center;
+    transform: rotateY(360deg) scale(1.04);
+    -webkit-transform: rotateY(360deg) scale(1.04);
 }
 
 /* Respect user motion preferences */
 @media (prefers-reduced-motion: reduce) {
     .site-avatar { animation: none !important; transition: none !important; transform: translateX(-50%) translateY(0); }
+    .site-avatar img { transform: none !important; }
 }
 
 .site-avatar img {
@@ -69,10 +80,13 @@ body {
     height: 100%;
     object-fit: cover;
     display: block;
-    backface-visibility: hidden;
-    -webkit-backface-visibility: hidden;
+    -webkit-backface-visibility: visible;
+    backface-visibility: visible;
+    -webkit-transform-style: preserve-3d;
     transform-style: preserve-3d;
-}
+    transition: transform 300ms cubic-bezier(.2,.8,.2,1);
+    -webkit-transition: -webkit-transform 300ms cubic-bezier(.2,.8,.2,1);
+} 
 
 @media (max-width: 480px) {
     .site-avatar {
@@ -279,6 +293,36 @@ p {
 
 .holiday-item:nth-child(odd) {
     animation-delay: 0.5s;
+}
+
+/* Highlight the next upcoming holiday */
+.holiday-item.upcoming {
+    background: linear-gradient(90deg, #fff1c9 0%, #ffe0a6 100%);
+    border: 2px solid #ffb347;
+    color: #2a2a2a;
+    box-shadow: 0 8px 20px rgba(255, 180, 60, 0.18);
+    animation: glow 3s ease-in-out infinite;
+    position: relative;
+    font-weight: 600;
+}
+
+.holiday-item .upcoming-badge {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: #ff6b6b;
+    color: white;
+    font-size: 0.75em;
+    padding: 4px 8px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+}
+
+@keyframes glow {
+    0% { box-shadow: 0 4px 12px rgba(255,180,60,0.10); }
+    50% { box-shadow: 0 10px 30px rgba(255,180,60,0.18); }
+    100% { box-shadow: 0 4px 12px rgba(255,180,60,0.10); }
 }
 
 @keyframes pulse {
