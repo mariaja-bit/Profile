@@ -8,20 +8,74 @@
 </head>
 <body>
     <div class="site-avatar">
-        <img src="avatar.png" alt="Profile avatar">
+        <img src="Avatar.png" alt="Profile avatar">
     </div>
 
-    <div class="holiday-calendar">
-        <h3>📅 2025 USA Holidays</h3>
-        <div class="holiday-item"><span class="date">Jan 1:</span> New Year's Day</div>
-        <div class="holiday-item"><span class="date">Jan 20:</span> Martin Luther King Jr. Day</div>
-        <div class="holiday-item"><span class="date">Feb 17:</span> Presidents' Day</div>
-        <div class="holiday-item"><span class="date">May 26:</span> Memorial Day</div>
-        <div class="holiday-item"><span class="date">Jul 4:</span> Independence Day</div>
-        <div class="holiday-item"><span class="date">Sep 1:</span> Labor Day</div>
-        <div class="holiday-item"><span class="date">Nov 27:</span> Thanksgiving</div>
-        <div class="holiday-item"><span class="date">Dec 25:</span> Christmas Day</div>
+    <div class="holiday-calendar" id="holiday-calendar">
+        <h3 id="hc-title">📅 2026 USA Holidays</h3>
+        <div id="holiday-list">
+            <!-- Holidays will be injected here by script -->
+        </div>
     </div>
+
+    <script>
+    // Generates major US federal holidays for the current year
+    (function(){
+        const year = new Date().getFullYear();
+        const titleEl = document.getElementById('hc-title');
+        const listEl = document.getElementById('holiday-list');
+        titleEl.textContent = `📅 ${year} USA Holidays`;
+
+        function formatDate(d){
+            return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+        }
+
+        function observedDate(d){
+            const day = d.getDay();
+            if(day === 6){ // Saturday -> observed Friday
+                const od = new Date(d); od.setDate(d.getDate() - 1); return od;
+            } else if(day === 0){ // Sunday -> observed Monday
+                const od = new Date(d); od.setDate(d.getDate() + 1); return od;
+            }
+            return d;
+        }
+
+        function nthWeekday(year, month, weekday, n){
+            if(n > 0){
+                let d = new Date(year, month, 1);
+                let count = 0;
+                while(true){
+                    if(d.getDay() === weekday) count++;
+                    if(count === n) return new Date(d);
+                    d.setDate(d.getDate() + 1);
+                }
+            } else { // last weekday of month
+                let d = new Date(year, month + 1, 0);
+                while(d.getDay() !== weekday) d.setDate(d.getDate() - 1);
+                return d;
+            }
+        }
+
+        function addHoliday(d, name){
+            const div = document.createElement('div');
+            div.className = 'holiday-item';
+            div.innerHTML = `<span class="date">${formatDate(d)}:</span> ${name}`;
+            listEl.appendChild(div);
+        }
+
+        // Fixed-date holidays (apply observed date rules)
+        addHoliday(observedDate(new Date(year, 0, 1)), "New Year's Day");
+        addHoliday(nthWeekday(year, 0, 1, 3), "Martin Luther King Jr. Day");
+        addHoliday(nthWeekday(year, 1, 1, 3), "Presidents' Day");
+        addHoliday(observedDate(new Date(year, 5, 19)), "Juneteenth");
+        addHoliday(nthWeekday(year, 4, 1, -1), "Memorial Day");
+        addHoliday(observedDate(new Date(year, 6, 4)), "Independence Day");
+        addHoliday(nthWeekday(year, 8, 1, 1), "Labor Day");
+        addHoliday(observedDate(new Date(year, 10, 11)), "Veterans Day");
+        addHoliday(nthWeekday(year, 10, 4, 4), "Thanksgiving");
+        addHoliday(observedDate(new Date(year, 11, 25)), "Christmas Day");
+    })();
+    </script>
 
     <div class="container">
         <div class="wave-bg">
