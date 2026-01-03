@@ -28,7 +28,7 @@ body {
     position: fixed;
     top: 20px;
     left: 50%;
-    transform: translateX(-50%);
+    transform: translateX(-50%) translateY(0);
     z-index: 1100;
     width: 140px;
     height: 140px;
@@ -40,6 +40,28 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
+    transform-style: preserve-3d;
+    backface-visibility: hidden;
+    will-change: transform;
+    animation: float-vertical 6s ease-in-out infinite;
+    transition: transform 600ms cubic-bezier(.2,.8,.2,1);
+}
+
+/* Vertical float animation (smaller amplitude) */
+@keyframes float-vertical {
+    0%, 100% { transform: translateX(-50%) translateY(0); }
+    50%     { transform: translateX(-50%) translateY(-6px); }
+}
+
+/* Hover: pause float and perform a half-spin (180deg) */
+.site-avatar:hover {
+    animation-play-state: paused;
+    transform: translateX(-50%) translateY(-3px) rotateY(180deg) scale(1.04);
+}
+
+/* Respect user motion preferences */
+@media (prefers-reduced-motion: reduce) {
+    .site-avatar { animation: none !important; transition: none !important; transform: translateX(-50%) translateY(0); }
 }
 
 .site-avatar img {
@@ -47,6 +69,9 @@ body {
     height: 100%;
     object-fit: cover;
     display: block;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    transform-style: preserve-3d;
 }
 
 @media (max-width: 480px) {
